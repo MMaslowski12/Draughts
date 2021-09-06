@@ -165,7 +165,7 @@ class Board:
                     if not just_killed:
 
                         if np.sign(moves[i+1]['y'] - moves[i]['y']) != np.sign(moves[i]['y'] - moves[i-1]['y']) or np.sign(moves[i+1]['x'] - moves[i]['x']) != np.sign(moves[i]['x'] - moves[i-1]['x']):
-
+                            self.show()
                             raise ValueError("Can't change your direction here")
 
                         

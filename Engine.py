@@ -20,6 +20,7 @@ class Engine:
             new_board = self.board.make_move(moves)
 
         except ValueError as ve:
+            self.board.show()
             print("Move not allowed: " + ve.args[0])
             raise ve
 
@@ -47,6 +48,7 @@ class Game:
 
         try:
             self.engine.make_move(move)
+            
         except ValueError as ve:
             print("Move not allowed - BLACK WINS" if is_white else "Move not allowed - WHITE WINS")
             print(ve.args[0])
