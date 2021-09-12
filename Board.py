@@ -5,119 +5,137 @@ from PIL import Image, ImageColor
 import IPython.display
 
 from Piece import Piece
+from Position import Position
 from Graphics import draw_circle
 
-
+#final cleanup
+#experimental changes
+#more radnom changes
+# White is the player, who moves next (this makes implementation easier - we don't have to if everywhere whose move it is)
+# Rows are represented by 'y' axis, columns by 'x' axis. Both are indexed from 0 to 9. (0, 0) is the left-uppermost square
 class Board:
-    # From the board's percpective, always white moves
     def newWhite(self, y, x, king=False):
         white = Piece.whitePiece(y, x, king)
         self.whites += [white]
         return white
-
+    
     def newBlack(self, y, x, king=False):
         black = Piece.blackPiece(y, x, king)
         self.blacks += [black]
         return black
-
-
-    def on_board(self, y, x):
-        return 0 <= y and y < 10 and 0 <= x and x < 10
-
-    def isWhite(self, y, x):
-        if not self.on_board(y, x):
+    
+#     check, if a given position is on the board
+    def on_board(self, where):
+        return 0 <= where.y and where.y < 10 and 0 <= where.x and where.x < 10
+    
+#     check, if the given position is on the board and is occupied by a white piece
+    def isWhite(self, where):
+        if not self.on_board(where):
             return False
-        if self.world[y][x] is None:
+        if self.world[where.y][where.x] is None:
             return False
-        return self.world[y][x].white
-
-    def isBlack(self, y, x):
-        if not self.on_board(y, x):
+        return self.world[where.y][where.x].white
+    
+#     check, if the given position is on the board and is occupied by a black piece
+    def isBlack(self, where):
+        if not self.on_board(where):
             return False
-        if self.world[y][x] is None:
+        if self.world[where.y][where.x] is None:
             return False
-        return not self.world[y][x].white
-
-    def isEmpty(self, y, x):
-        if not self.on_board(y, x):
+        return not self.world[where.y][where.x].white
+    
+#     check, if the given position is on the board and is not occupied
+    def isEmpty(self, where):
+        if not self.on_board(where):
             return False
-        return self.world[y][x] is None
-
-
+        return self.world[where.y][where.x] is None
+    
+#     check, if the white cannot make any move and therefore lost
     def white_lost(self):
         if len(self.whites) == 0:
             return True
-        if self.kill_possible():
+        if self.capture_possible():
             return False
         if self.normal_move_possible():
             return False
         return True
-
-    def kill_possible(self):
+    
+#     check, if it is possible for the white player to capture an opponent's piece
+    def capture_possible(self, debug=False):
+#         iterate over all the white pieces
         for white in self.whites:
             if not white.king:
                 for i in [-1, 1]:
-                    if self.isBlack(white.y + 1, white.x + i):
-                        if self.isEmpty(white.y + 2, white.x + 2*i):
+                    if self.isBlack(white.position().add(1, i)):
+                        if self.isEmpty(white.position().add(2, 2*i)):
+                            if debug:
+                                print(str(white.position().y) + ", " + str(white.position().x) + " -> " + str(white.position().add(2, 2*i).y) + ", " + str(white.position().add(2, 2*i).x))
                             return True
-
+                        
             else:
-                for yi in [-1, 1]:
-                    for xi in [-1, 1]:
-                        whereY = white.y + yi
-                        whereX = white.x + xi
-                        while self.isEmpty(whereY, whereX):
-                            whereY += yi
-                            whereX += xi
-                        if self.isBlack(whereY, whereX) and self.isEmpty(whereY + yi, whereX + xi):
+#             iterate over possible directions of movement
+                for xi in [-1, 1]:
+                    for yi in [-1, 1]:
+                        where = white.position().add(yi, xi)
+#                     go in that direction, until an occuppied field is found
+                        while (self.isEmpty(where)):
+                            where = where.add(yi, xi)
+                        if self.isBlack(where) and self.isEmpty(where.add(yi, xi)):
                             return True
         return False
-
+    
+#     check, if a non-capturing move is possible
     def normal_move_possible(self):
         for white in self.whites:
             for i in [-1, 1]:
-                if self.isEmpty(white.y + 1, white.x + i):
+                if self.isEmpty(white.position().add(1, i)):
                     return True
-                if white.king and self.isEmpty(white.y - 1, white.x + i):
+                if white.king and self.isEmpty(white.position().add(-1, i)):
                     return True
         return False
-
-
-    def copy(self):
-        new_board = Board()
-        new_board.whites = []
-        new_board.blacks = []
-        for y in range(10):
-            for x in range(10):
-                if self.world[y][x] is None:
-                    new_board.world[y][x] = None
-                else:
-                    if self.world[y][x].white:
-                        piece = Piece(True, self.world[y][x].king, y, x)
-                        new_board.whites += [piece]
-                        new_board.world[y][x] = piece
-                    else:
-                        piece = Piece(False, self.world[y][x].king, y, x)
-                        new_board.blacks += [piece]
-                        new_board.world[y][x] = piece
-        return new_board
-
-
+    
+    
+#     initializes the board to a starting configuration
     def __init__(self):
         self.whites = []
         self.blacks = []
-
+        
         self.world = [[(self.newWhite(y, x) if y < 3 else self.newBlack(y, x))
-                           if ((x + y) % 2 == 0 and (y < 3 or y > 6)) else None
+                           if ((x + y) % 2 == 0 and (y < 3 or y > 6)) else None 
                     for x in range(10)]
                     for y in range(10)]
-
-        self.debug = False
-
-
+    
+    
+    @staticmethod
+    def empty_board():
+        to_return = Board()
+        to_return.whites = []
+        to_return.blacks = []
+        to_return.world = [[None for x in range(10)] for y in range(10)]
+        return to_return
+    
+    
+#     returns a safe copy of the board
+    def copy(self):
+        new_board = Board.empty_board()
+        new_board.whites = []
+        new_board.blacks = []
+        
+        for white in self.whites:
+            new_board.world[white.y][white.x] = new_board.newWhite(white.y, white.x, white.king)
+            
+        for black in self.blacks:
+            new_board.world[black.y][black.x] = new_board.newBlack(black.y, black.x, black.king)
+            
+        return new_board
+        
+        
+#     returns a new board which is this board turned around with all the pieces colours reversed.
+#     We need this function at the end of each move, so that in the
+#     internal representation the player who is about to move is white
     def revert(self):
         new_board = self.copy()
-
+        
         new_board.whites, new_board.blacks = new_board.blacks, new_board.whites
         for piece in new_board.whites + new_board.blacks:
             piece.changeColour()
@@ -127,146 +145,130 @@ class Board:
         for x in range(10):
             for y in range(5):
                 new_board.world[y][x], new_board.world[9 - y][9 - x] = new_board.world[9 - y][9 - x], new_board.world[y][x]
-
+        
         return new_board
-
-
+        
+        
+#     Make a full move and return a state of board after it
     def make_move(self, moves):
-
         if len(moves) < 2:
-            raise ValueError("You have to move", self, moves)
-        else:
-            if self.kill_possible():
-                origin = moves[0]
-                dest = moves[1]
-                yi = np.sign(dest['y'] - origin['y'])
-                xi = np.sign(dest['x'] - origin['x'])
-                
-
-                if not self.world[origin['y']][origin['x']].king:
-                    if (dest['y'] - origin['y']) != 2:
-                        
-                              
-                        raise ValueError("You must kill (incorrect man move)", self, moves)
-                else:
-                    whereY = origin['y'] + yi
-                    whereX = origin['x'] + xi
-                    while self.isEmpty(whereY, whereX):
-                        whereY += yi
-                        whereX += xi
-                    if not (self.isBlack(whereY, whereX) and self.isEmpty(whereY + yi, whereX + xi)):
-                        raise ValueError("You must kill (incorrect king move)", self, moves)
-
-
-            new_board = self.copy()
-            just_killed = False
-            for i in range(len(moves) - 1):
-                if i > 0 and new_board.world[moves[i]['y']][moves[i]['x']].king:
-                    if not just_killed:
-
-                        if np.sign(moves[i+1]['y'] - moves[i]['y']) != np.sign(moves[i]['y'] - moves[i-1]['y']) or np.sign(moves[i+1]['x'] - moves[i]['x']) != np.sign(moves[i]['x'] - moves[i-1]['x']):
-                            self.show()
-                            raise ValueError("Can't change your direction here")
-
-                        
-                            
-                new_board, just_killed = new_board.make_single_move(
-                    moves[i]['y'], moves[i]['x'], moves[i+1]['y'], moves[i+1]['x'], must_kill=(i > 0 or self.kill_possible()))
-
-            if moves[-1]['y'] == 9:
-                for white in new_board.whites:
-                    if white.y == moves[-1]['y'] and white.x == moves[-1]['x']:
-                        white.king = True
-                new_board.world[moves[-1]['y']][moves[-1]['x']].king = True
-
-            return new_board.revert()
-
-
-    def make_single_move(self, y, x, newY, newX, must_kill=False):
+            raise ValueError("You have to move to a new position", self, moves)
+            
         new_board = self.copy()
-        piece = new_board.world[y][x]
-        direction = -1 if np.sign(newY - y) != np.sign(newX - x) else 1
-        just_killed = False
+        for i in range(len(moves) - 1):
+            new_board = new_board.make_single_move(
+                moves[i], moves[i+1],
+                must_capture=(i > 0 or self.capture_possible()), first_move=(i == 0))
 
-        moves = [{'y': y, 'x': x}, {'y': newY, 'x': newX}]
-        if not self.isWhite(y, x):
-            raise ValueError("You have to move your own piece", self, moves)
-        if not self.isEmpty(newY, newX):
-            raise ValueError("You have to move to an empty field", self, moves)
+#             if a piece ends its move on the end of a board, it is crowned
+        piece = new_board.world[moves[-1].y][moves[-1].x]
+        if piece.y == 9:
+            piece.king = True
 
-
-        if must_kill:
+#             Revert board at the end of a move, so that the player who moves is white in Board's internal representation
+        return new_board.revert()
+        
+    
+#     Make a single move from one position to another (i. e., a single capture or a single step)
+    def make_single_move(self, old, new, must_capture=False, first_move=True):
+        new_board = self.copy()
+        piece = new_board.world[old.y][old.x]
+        yi = np.sign(new.y - old.y)
+        xi = np.sign(new.x - old.x)
+        
+        moves_log = {
+            'move': [{'y': old.y, 'x': old.x}, {'y': new.y, 'x': new.x}],
+            'must_capture': must_capture, 'first_move': first_move}
+        if not self.isWhite(old):
+            raise ValueError("You have to move your own piece", self, moves_log)
+        if not self.isEmpty(new):
+            raise ValueError("You have to move to an empty field", self, moves_log)
+        
+        
+        if must_capture:
             if not piece.king:
-                if abs(newY - y) != 2 or abs(newX - x) != 2:
-                    raise ValueError("You have to capture", self, moves)
-                if not self.isBlack(int((y+newY)/2), int((x+newX)/2)):
-                    raise ValueError("You have to capture an enemy", self, moves)
+                if abs(new.y - old.y) != 2 or abs(new.x - old.x) != 2 or (first_move and new.y - old.y != 2):
+                    print(self.capture_possible(True))
+                    raise ValueError("You have to capture", self, moves_log)
+                if not self.isBlack(old.middle(new)):
+                    raise ValueError("You have to capture an enemy", self, moves_log)
 
+#             update the new_board after this move - remove the captured black piece
                 for black in new_board.blacks:
-                    if black.y == y+1 and black.x == int((x+newX)/2):
+                    if black.y == old.y+1 and black.x == old.middle(new).x:
                         new_board.blacks.remove(black)
                         break
-                new_board.world[int((y+newY)/2)][int((x+newX)/2)] = None
-
+                new_board.world[old.middle(new).y][old.middle(new).x] = None
+                
             else:
-                if abs(newY - y) != abs(newX - x):
+                if abs(new.y - old.y) != abs(new.x - old.x):
                     raise ValueError("You cannot move there - too far", self, moves)
-
-                y_range = range(newY + 1, y) if newY < y else range(y + 1, newY)
-                y_dir = -1 if newY < y else 1
-                for y_temp in y_range:
-                    x_temp = x + (y_temp - y) * direction
-                    if self.isWhite(y_temp, x_temp):
-                        raise ValueError("You cannot move over your piece", self, moves)
-                    if self.isBlack(y_temp, x_temp):
-                        if not self.isEmpty(y_temp + y_dir, x_temp + y_dir * direction):
-                            raise ValueError("You cannot capture more than one pieces at once", self, moves)
-
-                    if self.isBlack(newY - y_dir, newX - y_dir * direction):
-                        just_killed = True
-
+                
+#                 check if there is a black piece captures
+                where = old.add(yi, xi)
+                captured = []
+                while where.y != new.y:
+                    if self.isBlack(where):
+                        captured += [where]
+                        if not self.isEmpty(where.add(yi, xi)):
+                            raise ValueError("You cannot capture more than one piece at one!", self, moves_log)
+                    if self.isWhite(where):
+                        raise ValueError("You cannot move over your own piece!", self, moves_log)
+                    where = where.add(yi, xi)
+                    
+                if len(captured) == 0:
+                    raise ValueError("You have to capture an enemy's piece", self, moves_log)
+                
+#             update the new_board after this move - remove the captured black piece
+                for captured_position in captured:
                     for black in new_board.blacks:
-                        if black.y == y_temp and black.x == x_temp:
+                        if black.y == captured_position.y and black.x == captured_position.x:
                             new_board.blacks.remove(black)
                             break
-                    new_board.world[y_temp][x_temp] = None
-
-
+                    new_board.world[captured_position.y][captured_position.x] = None
+                
+        
         else:
             if not piece.king:
-                if newY - y != 1 or abs(newX - x) != 1:
-                    raise ValueError("You cannot move there - wrong destination", self, moves)
+                if new.y - old.y != 1 or abs(new.x - old.x) != 1:
+                    raise ValueError("The position is inaccessible for this piece", self, moves_log)
             else:
-                if abs(newY - y) != abs(newX - x):
-                    raise ValueError("You cannot move there - not diagonal", self, moves)
-
-                y_range = range(newY + 1, y) if newY < y else range(y + 1, newY)
-                for y_temp in y_range:
-                    x_temp = x + (y_temp - y) * direction
-                    if not self.isEmpty(y_temp, x_temp):
-                        raise ValueError("You cannot move over a taken field", self, moves)
-
+                if abs(new.y - old.y) != abs(new.x - old.x):
+                    raise ValueError("You can only move diagonally", self, moves_log)
+                
+                where = old.add(yi, xi)
+                while where.y != new.y:
+                    if not self.isEmpty(where):
+                        raise ValueError("You cannot move over this square", self, moves_log)
+                    where = where.add(yi, xi)
+                
+                if not self.isEmpty(where):
+                    raise ValueError("You cannot move to this square", self, moves_log)
+        
+        
+#       update the new_board after this move - the white piece who moved
         for white in new_board.whites:
-            if white.y == y and white.x == x:
-                white.x = newX
-                white.y = newY
-        new_board.world[newY][newX] = new_board.world[y][x]
-        new_board.world[y][x] = None
-
-        return new_board, just_killed
-
-
+            if white.y == old.y and white.x == old.x:
+                white.x = new.x
+                white.y = new.y
+        new_board.world[new.y][new.x] = new_board.world[old.y][old.x]
+        new_board.world[old.y][old.x] = None
+        
+        return new_board
+    
+    
+#     display the board
     def show(self, black_moves = False):
         if black_moves:
             self.revert().show()
             return
-
+        
         white = (200, 255, 200)
         black = (0, 100, 0)
-
+        
         size = 40
         img = Image.new("RGB", (10 * size, 10 * size))
-
+        
         arr = np.array(img)
         arr[:] = (255, 255, 255)
 
