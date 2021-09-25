@@ -157,7 +157,7 @@ class Board:
         new_board = self.copy()
         for i in range(len(moves) - 1):
             new_board = new_board.make_single_move(
-                moves[i], moves[i+1],
+                moves[i], moves[i+1], moves,
                 must_capture=(i > 0 or self.capture_possible()), first_move=(i == 0))
 
 #             if a piece ends its move on the end of a board, it is crowned
@@ -170,7 +170,7 @@ class Board:
         
     
 #     Make a single move from one position to another (i. e., a single capture or a single step)
-    def make_single_move(self, old, new, must_capture=False, first_move=True):
+    def make_single_move(self, old, new, move, must_capture=False, first_move=True):
         new_board = self.copy()
         piece = new_board.world[old.y][old.x]
         yi = np.sign(new.y - old.y)
@@ -187,10 +187,16 @@ class Board:
         
         if must_capture:
             if not piece.king:
+                if len(move) > 3:
+                    if move[0].y == 3 and move[2].x == 5 and move[2].y == 3 and move[3].y == 5 and move[3].x == 3: 
+                        self.show()
                 if abs(new.y - old.y) != 2 or abs(new.x - old.x) != 2 or (first_move and new.y - old.y != 2):
                     print(self.capture_possible(True))
                     raise ValueError("You have to capture", self, moves_log)
                 if not self.isBlack(old.middle(new)):
+                    haha = [[s.y, s.x] for s in move]
+                    print(haha)
+                    self.show()
                     raise ValueError("You have to capture an enemy", self, moves_log)
 
 #             update the new_board after this move - remove the captured black piece
