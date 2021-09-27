@@ -97,13 +97,26 @@ class Board:
     
 #     initializes the board to a starting configuration
     def __init__(self):
+#         self.whites = []
+#         self.blacks = []
+        
+#         self.world = [[(self.newWhite(y, x) if y < 3 else self.newBlack(y, x))
+#                            if ((x + y) % 2 == 0 and (y < 3 or y > 6)) else None 
+#                     for x in range(10)]
+#                     for y in range(10)]
+    
         self.whites = []
         self.blacks = []
+        self.world = [[None for x in range(10)] for y in range(10)]
         
-        self.world = [[(self.newWhite(y, x) if y < 3 else self.newBlack(y, x))
-                           if ((x + y) % 2 == 0 and (y < 3 or y > 6)) else None 
-                    for x in range(10)]
-                    for y in range(10)]
+        self.world[3][9] = self.newWhite(3, 9)
+        self.world[4][8] = self.newBlack(4, 8)
+        self.world[4][6] = self.newBlack(4, 6)
+        self.world[4][4] = self.newBlack(4, 4)
+        self.world[6][6] = self.newBlack(6, 6)
+        self.world[6][4] = self.newBlack(6, 4)
+        self.world[0][0] = self.newWhite(0, 0)
+        self.world[9][1] = self.newBlack(9, 1)
     
     
     @staticmethod
@@ -187,21 +200,21 @@ class Board:
         
         if must_capture:
             if not piece.king:
-                if len(move) > 3:
-                    if move[0].y == 3 and move[2].x == 5 and move[2].y == 3 and move[3].y == 5 and move[3].x == 3: 
-                        self.show()
+#                 if len(move) > 3:
+#                     if move[0].y == 3 and move[2].x == 5 and move[2].y == 3 and move[3].y == 5 and move[3].x == 3: 
+#                         self.show()
                 if abs(new.y - old.y) != 2 or abs(new.x - old.x) != 2 or (first_move and new.y - old.y != 2):
                     print(self.capture_possible(True))
                     raise ValueError("You have to capture", self, moves_log)
                 if not self.isBlack(old.middle(new)):
                     haha = [[s.y, s.x] for s in move]
                     print(haha)
-                    self.show()
+#                     self.show()
                     raise ValueError("You have to capture an enemy", self, moves_log)
 
 #             update the new_board after this move - remove the captured black piece
                 for black in new_board.blacks:
-                    if black.y == old.y+1 and black.x == old.middle(new).x:
+                    if black.y == old.middle(new).y and black.x == old.middle(new).x:
                         new_board.blacks.remove(black)
                         break
                 new_board.world[old.middle(new).y][old.middle(new).x] = None
