@@ -97,26 +97,13 @@ class Board:
     
 #     initializes the board to a starting configuration
     def __init__(self):
-#         self.whites = []
-#         self.blacks = []
-        
-#         self.world = [[(self.newWhite(y, x) if y < 3 else self.newBlack(y, x))
-#                            if ((x + y) % 2 == 0 and (y < 3 or y > 6)) else None 
-#                     for x in range(10)]
-#                     for y in range(10)]
-    
         self.whites = []
         self.blacks = []
-        self.world = [[None for x in range(10)] for y in range(10)]
         
-        self.world[3][9] = self.newWhite(3, 9)
-        self.world[4][8] = self.newBlack(4, 8)
-        self.world[4][6] = self.newBlack(4, 6)
-        self.world[4][4] = self.newBlack(4, 4)
-        self.world[6][6] = self.newBlack(6, 6)
-        self.world[6][4] = self.newBlack(6, 4)
-        self.world[0][0] = self.newWhite(0, 0)
-        self.world[9][1] = self.newBlack(9, 1)
+        self.world = [[(self.newWhite(y, x) if y < 3 else self.newBlack(y, x))
+                           if ((x + y) % 2 == 0 and (y < 3 or y > 6)) else None 
+                    for x in range(10)]
+                    for y in range(10)]
     
     
     @staticmethod
