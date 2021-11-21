@@ -9,7 +9,7 @@ In this repository you can find:
 ## Installation
 
 ## Instructions
-How to play a game against Rupert:
+### How to play a game against Rupert:
 In order to play against Rupert, you need to run the Rupert.ipynb program
 Then, an interface will appear:
 ![](./pictures/UI.png)
@@ -23,3 +23,11 @@ Program is set so that bot plays with white pieces by default. Should you want t
 
 The AI works with depth four to save time. Should you want to increase its abilities at expense of response time, please change it to six in the underlined part of the code below.
 ![You can change depth to six here](./pictures/depth.png)
+
+### In order to see the neural net predicting handwritten digits:
+Launch the "96digits.ipynb"
+![](./pictures/digits.png)
+You should be able to see:
+- A transformed picture(1) of an arbitrary input(input nr 21 by default)
+- A program's estimates regarding the number portrayed on it(2). Estimates are provided in the form of an array, where 1st number of an array corresponds to code's predictions about whether there is a 0 portrayed in a picture, the 2nd number - whether 1 is portrayed etc.(You can see that for the picture nr 21 program believes the most probable choice is a digit 6(6.09), and rates the probability of it being 0 as 0.02)
+- accuracy of the program on a sample it has never seen before (0.9595)
