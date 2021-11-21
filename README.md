@@ -7,7 +7,6 @@ In this repository you can find:
 - handwritten digits.ipynb, which is the independent sideproject focusing o creating a neural network distinguishing handwritten digits and 96handwriter - a trained model distinguishing digits with 96% accuracy
 
 ## Installation
-napisac do alex odnosnie tego co trzeba instalować
 
 ## Instructions
 How to play a game against Rupert:
