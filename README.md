@@ -1,5 +1,5 @@
 ## Introduction
-In this repositoryyou can find:
+In this repository you can find:
 
 - Rupert: AI model playing checkers better than humans
 - Modules needed for Rupert to run properly, that is: Board.py, Engine.py, Game.py, Graphics.py, Neurals(in progress).py, Piece.py, Position.py
