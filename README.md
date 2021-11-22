@@ -7,6 +7,25 @@ In this repository you can find:
 - handwritten digits.ipynb, which is the independent sideproject focusing o creating a neural network distinguishing handwritten digits and 96handwriter - a trained model distinguishing digits with 96% accuracy
 
 ## Installation
+In order to run this program properly, you need:
+- pip
+- python3
+- jupyter notebook
+Libraries:
+- math
+- copy
+- numpy
+- random
+- time
+- import_ipynb
+- pillow
+- IPython.display
+- tensorflow
+- tensorflow.keras.models
+- keras
+- keras.datasets
+- matplotlib.pyplot
+- pandas
 
 ## Instructions
 ### How to play a game against Rupert:
