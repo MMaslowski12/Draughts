@@ -11,6 +11,7 @@ In order to run this program properly, you need:
 - pip
 - python3
 - jupyter notebook
+
 Libraries:
 - math
 - copy
