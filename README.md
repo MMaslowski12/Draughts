@@ -42,8 +42,8 @@ You need to specify your move. To do so, insert four digits sperated with a spac
 
 Program is set so that bot plays with white pieces by default. Should you want to play as white pieces yourself, please change the True argument to False in a game.play_human() function located at the end of the code.
 
-The AI works with depth four to save time. Should you want to increase its abilities at expense of response time, please change it to six in the underlined part of the code below.
-![You can change depth to six here](./pictures/depth.png)
+The AI works with self.max_depth four to save time. Should you want to increase skills of the bot at expense of response time, please change it to six in the underlined part of the code below.
+![You can change self.max_depth to six here](./pictures/depth.png)
 
 ### In order to see the neural net predicting handwritten digits:
 Launch the "96digits.ipynb"
