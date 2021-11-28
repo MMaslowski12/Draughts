@@ -8,11 +8,12 @@ In this repository you can find:
 
 ## Installation
 In order to run this program properly, you need:
-- pip
-- python3
-- jupyter notebook
+- python3 (You can install it here https://www.python.org/downloads/)
+- pip(You can see how to install it here https://intellipaat.com/blog/tutorial/python-tutorial/python-pip/)
+- jupyter notebook (write 'pip install notebook' in terminal and 'jupyter notebook' to find and open .ipynb files)
 
 Libraries:
+To install any of those libraries, write 'pip install {name}' 
 - math
 - copy
 - numpy
@@ -33,9 +34,9 @@ Libraries:
 In order to play against Rupert, you need to run the Rupert.ipynb program
 Then, an interface will appear:
 ![](./pictures/UI.png)
-You need to specify your move. To do so, insert four digits sperated with a space:
-- First two digits specify the starting position of a piece You want to move
-- Another pair of digits specify the ending position of a piece You want to move
+You need to specify your move. To do so, insert four digits sperated with a space m, n, l, p:
+- m and n specify the starting position of a piece You want to move
+- l and p specify the ending position of a piece You want to move
 - Please specify the position using y and x coordinates(in that specific order), where the upper left corner of a board has coordinates 0 0, the upper right corner - 0 9, lower left corner - 9 0, and the lower right corner - 9 9. Please note the coordinates of those points has been specified by y x notation, the same way they should be inserted.
 - Should You be able to capture more than one opponent's piece and therefore do a more complex move, please specify it by insering pairs of y and x coordinates of every 'turning point', including the beginning and the end of the move
 
