@@ -33,9 +33,11 @@ To install any of those libraries, write 'pip install {name}'
 ### How to play a game against Rupert:
 In order to play against Rupert, you need to run the Rupert.ipynb program
 Then, an interface will appear:
-&ensp;
+
+
 ![](./pictures/UI.png)
-&ensp;
+
+
 You need to specify your move. To do so, insert four digits sperated with a space m, n, l, p:
 - m and n specify the starting position of a piece You want to move
 - l and p specify the ending position of a piece You want to move
