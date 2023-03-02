@@ -39,8 +39,8 @@ Then, an interface will appear:
 
 
 You need to specify your move. To do so, insert four digits sperated with a space m, n, l, p:
-- m and n specify the starting position of a piece You want to move
-- l and p specify the ending position of a piece You want to move
+- m and n specify the starting position of a piece you want to move
+- l and p specify the ending position of a piece you want to move
 - Please specify the position using y and x coordinates(in that specific order), where the upper left corner of a board has coordinates 0 0, the upper right corner - 0 9, lower left corner - 9 0, and the lower right corner - 9 9. Please note the coordinates of those points has been specified by y x notation, the same way they should be inserted.
 - Should You be able to capture more than one opponent's piece and therefore do a more complex move, please specify it by insering pairs of y and x coordinates of every 'turning point', including the beginning and the end of the move
 
@@ -52,7 +52,7 @@ The AI works with self.max_depth four to save time. Should you want to increase 
 ![You can change self.max_depth to six here](./pictures/depth.png)
 
 
-### In order to see the neural net predicting handwritten digits:
+### To see the neural net predicting handwritten digits:
 Launch the "96digits.ipynb"
 
 
