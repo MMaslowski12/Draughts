@@ -4,7 +4,6 @@ In this repository you can find:
 - Rupert: AI model playing checkers better than humans
 - Modules needed for Rupert to run properly, that is: Board.py, Engine.py, Game.py, Graphics.py, Neurals(in progress).py, Piece.py, Position.py
 - archives.txt automatically saving every move to help Rupert run more efficently
-- handwritten digits.ipynb, which is the independent sideproject focusing o creating a neural network distinguishing handwritten digits and 96handwriter - a trained model distinguishing digits with 96% accuracy
 
 ## Installation
 In order to run this program properly, you need:
@@ -50,16 +49,3 @@ The AI works with self.max_depth four to save time. Should you want to increase 
 
 
 ![You can change self.max_depth to six here](./pictures/depth.png)
-
-
-### To see the neural net predicting handwritten digits:
-Launch the "96digits.ipynb"
-
-
-![](./pictures/digits.png)
-
-
-You should be able to see:
-- A transformed picture(1) of an arbitrary input(input 21 by default)
-- A program's estimates regarding the number portrayed on it(2). Estimates are provided in the form of an array, where 1st number of an array corresponds to code's predictions about whether there is a 0 portrayed in a picture, the 2nd number - whether 1 is portrayed etc. You can see that for the picture 21 program believes the most probable choice is a digit 6(6.09), and rates the probability of it being 0 as 0.02
-- ratio of times the program predicted the digit right on a sample it has never seen before
